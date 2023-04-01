@@ -1,0 +1,7 @@
+{% for f in ansible_facts['all_ipv4_addresses'] %}
+{% for item in hosts_entries %}
+{% if f == item.ip %}
+{{ item.hostname }}
+{% endif %}
+{% endfor %}
+{% endfor %}

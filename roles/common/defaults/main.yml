@@ -1,0 +1,7 @@
+# Security limits
+limits_soft: 128000
+limits_hard: 128000
+
+# ntp
+ntp_server: ntp.ix.ru
+ntp_type: server

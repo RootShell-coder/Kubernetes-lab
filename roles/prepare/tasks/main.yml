@@ -1,0 +1,44 @@
+---
+- name: Disable swap
+  ansible.builtin.command: swapoff -a
+  changed_when: true
+  when: ansible_swaptotal_mb > 0
+
+- name: Remove swap from fstab
+  ansible.builtin.lineinfile:
+    path: '/etc/fstab'
+    regexp: '\sswap\s'
+    state: 'absent'
+
+- name: update hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644
+    backup: '{{ backup_hosts_file | default(true) }}'
+
+- name: update hostname file
+  template:
+    src: hostname.j2
+    dest: /etc/hostname
+    owner: root
+    group: root
+    mode: 0644
+# debug
+# - name: print inventory_hostname
+#   ansible.builtin.debug:
+#     var: inventory_hostname
+# - name: print ansible_hostname
+#   ansible.builtin.debug:
+#     var: ansible_hostname
+# - name: print ansible_fqdn
+#   ansible.builtin.debug:
+#     var: ansible_fqdn
+# - name: Debug hostvars
+#   debug:
+#     var: hosts_entries
+# - name: Print all available facts
+#   ansible.builtin.debug:
+#     var: ansible_facts['all_ipv4_addresses']

@@ -1,0 +1,13 @@
+---
+- name: Reload sysctl
+  ansible.builtin.command: sysctl -p /etc/sysctl.d/10-sysctl.conf
+
+- name: Reload sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted
+
+- name: Reload chrony
+  ansible.builtin.service:
+    name: chronyd
+    state: restarted

@@ -1,0 +1,77 @@
+---
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - net-tools
+      - tcpdump
+      - iptables
+      - iptables-persistent
+      - chrony
+      - htop
+      - sudo
+      - python3
+      - python3-pip
+    update_cache: true
+    state: present
+
+- name: Add the user '{{ ansible_ssh_user }}' to sudo group
+  ansible.builtin.user:
+    name: '{{ ansible_ssh_user }}'
+    groups: sudo
+    append: true
+
+- name: Sudoers file nopasswd
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo.*ALL='
+    line: "%sudo\tALL=(ALL:ALL) NOPASSWD: ALL"
+    validate: /usr/sbin/visudo -cf %s
+
+- name: Ssh disable ipv6
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#AddressFamily any'
+    line: 'AddressFamily Inet'
+  notify: Reload sshd
+
+- name: Chrony disable ipv6 daemon
+  ansible.builtin.lineinfile:
+    path: /etc/default/chrony
+    regexp: '^DAEMON_OPTS="-F 1"'
+    line: 'DAEMON_OPTS="-4 -F 1"'
+
+- name: Chrony disable ipv6 options
+  ansible.builtin.lineinfile:
+    path: /etc/default/chrony
+    line: 'OPTIONS="-4"'
+
+- name: Chrony NTP server
+  ansible.builtin.lineinfile:
+    path: /etc/chrony/chrony.conf
+    regexp: '^(server|pool).*iburst'
+    line: '{{ ntp_type }} {{ ntp_server }} iburst'
+  notify: Reload chrony
+
+- name: Hard limit
+  ansible.builtin.lineinfile:
+    path: /etc/security/limits.conf
+    regexp: '^#<domain>.*<type>.*<item>.*<value>$'
+    insertafter: '<value>\n'
+    line: "*\t\thard\tnproc\t\t{{ limits_hard }}"
+
+- name: Soft limit
+  ansible.builtin.lineinfile:
+    path: /etc/security/limits.conf
+    regexp: '^#<domain>.*<type>.*<item>.*<value>$'
+    insertafter: '<value>\n'
+    line: "*\t\tsoft\tnproc\t\t{{ limits_soft }}"
+
+- name: Sysctl file
+  ansible.builtin.copy:
+    src: files/10-sysctl.conf
+    dest: /etc/sysctl.d/10-sysctl.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload sysctl

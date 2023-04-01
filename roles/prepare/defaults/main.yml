@@ -1,0 +1,8 @@
+---
+hosts_entries:
+  - { ip: '192.168.0.2', hostname: 'k8s0-master', domain: 'example.com' }
+  - { ip: '192.168.0.3', hostname: 'k8s1-master', domain: 'example.com' }
+  - { ip: '192.168.0.4', hostname: 'k8s2-master', domain: 'example.com' }
+  - { ip: '192.168.0.5', hostname: 'k8s3-node', domain: 'example.com' }
+  - { ip: '192.168.0.6', hostname: 'k8s4-node', domain: 'example.com' }
+  - { ip: '192.168.0.7', hostname: 'k8s5-node', domain: 'example.com' }
