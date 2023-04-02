@@ -1,0 +1,5 @@
+- name: Kube install
+  become: true
+  hosts: all
+  roles:
+    - kube_install

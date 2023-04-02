@@ -1,0 +1,5 @@
+---
+- name: Update Grub
+  ansible.builtin.command: |
+    update-grub
+    reboot

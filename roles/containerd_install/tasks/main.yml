@@ -1,0 +1,76 @@
+---
+- name: Uninstall old versions
+  ansible.builtin.apt:
+    name:
+      - docker
+      - docker-engine
+      - docker.io
+      - containerd
+      - runc
+    state: absent
+    update_cache: true
+
+- name: Install packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+    update_cache: true
+    state: present
+
+- name: Make keyrings dir
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    mode: '0755'
+    state: directory
+    owner: root
+
+- name: Add Dockers official GPG key
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    keyring: /etc/apt/keyrings/docker.gpg
+    state: present
+
+- name: Add apt source
+  ansible.builtin.apt_repository:
+    repo: 'deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable'
+    state: present
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+
+- name: Install the containerd
+  ansible.builtin.apt:
+    name:
+      - curl
+      - gnupg2
+      - software-properties-common
+      - apt-transport-https
+      - ca-certificates
+      - containerd.io
+    state: present
+
+- name: Get Containerd configuration status
+  ansible.builtin.stat:
+    path: /etc/containerd/config.toml
+  register: __containerd_config
+
+# - name: Debug check size config.toml containerd
+#   ansible.builtin.debug:
+#     var: __containerd_config
+
+- name: Initialize Containerd configuration
+  ansible.builtin.shell: |
+    containerd config default > /etc/containerd/config.toml
+  when: __containerd_config.stat.size < 6000
+
+- name: Configuring the systemd cgroup driver
+  ansible.builtin.replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup\s*=\s*false'
+    replace: 'SystemdCgroup = true'
+  notify: Rerstart containerd

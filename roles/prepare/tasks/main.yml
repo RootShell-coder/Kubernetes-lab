@@ -10,7 +10,7 @@
     regexp: '\sswap\s'
     state: 'absent'
 
-- name: update hosts file
+- name: Update hosts file
   template:
     src: hosts.j2
     dest: /etc/hosts
@@ -19,13 +19,14 @@
     mode: 0644
     backup: '{{ backup_hosts_file | default(true) }}'
 
-- name: update hostname file
+- name: Update hostname file
   template:
     src: hostname.j2
     dest: /etc/hostname
     owner: root
     group: root
     mode: 0644
+    backup: '{{ backup_hostsname_file | default(true) }}'
 # debug
 # - name: print inventory_hostname
 #   ansible.builtin.debug:

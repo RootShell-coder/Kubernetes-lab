@@ -1,0 +1,7 @@
+---
+- name: Configig default grub
+  ansible.builtin.replace:
+    path: /etc/default/grub
+    regexp: 'GRUB_CMDLINE_LINUX_DEFAULT="quiet"'
+    replace: 'GRUB_CMDLINE_LINUX_DEFAULT="ipv6.disable=1 quiet splash"'
+  notify: Update Grub

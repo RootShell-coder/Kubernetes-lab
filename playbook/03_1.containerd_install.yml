@@ -1,0 +1,5 @@
+- name: Containerd install
+  become: true
+  hosts: all
+  roles:
+    - containerd_install

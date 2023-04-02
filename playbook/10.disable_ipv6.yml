@@ -1,0 +1,5 @@
+- name: Disable ipv6
+  become: true
+  hosts: all
+  roles:
+    - grub_disable_ipv6

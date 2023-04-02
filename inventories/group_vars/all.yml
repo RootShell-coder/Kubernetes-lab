@@ -1,11 +1,11 @@
 ---
 # Role common
-# Security limits
+# Security nproc limits
 limits_soft: 128000
 limits_hard: 128000
 
 # ntp
-ntp_server: ntp.psn.ru
+ntp_server: 192.168.10.3
 ntp_type: server
 
 # Role prepare
@@ -18,5 +18,6 @@ hosts_entries:
   - { ip: '192.168.100.6', hostname: 'k8s4', domain: 'cluster.loc' }
   - { ip: '192.168.100.7', hostname: 'k8s5', domain: 'cluster.loc' }
 
-# default = true /etc/hosts.uuuu.YYYY-MM-DD@HH:MM:SS~
+# default = true .uuuu.YYYY-MM-DD@HH:MM:SS~
 backup_hosts_file: false
+backup_hostsname_file: false

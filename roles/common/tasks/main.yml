@@ -3,6 +3,7 @@
   ansible.builtin.apt:
     name:
       - net-tools
+      - nfs-common
       - tcpdump
       - iptables
       - iptables-persistent
@@ -14,9 +15,9 @@
     update_cache: true
     state: present
 
-- name: Add the user '{{ ansible_ssh_user }}' to sudo group
+- name: Add the user user {{ lookup('env', 'USER') }} to sudo group
   ansible.builtin.user:
-    name: '{{ ansible_ssh_user }}'
+    name: "{{ lookup('env', 'USER') }}"
     groups: sudo
     append: true
 

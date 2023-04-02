@@ -1,0 +1,5 @@
+- name: Kubelet started node
+  become: true
+  hosts: node
+  roles:
+    - kubelet
