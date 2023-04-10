@@ -1,22 +1,21 @@
----
 # Role common
 # Security nproc limits
 limits_soft: 128000
 limits_hard: 128000
 
 # ntp
-ntp_server: 192.168.10.3
+ntp_server: 192.168.10.5
 ntp_type: server
 
 # Role prepare
 # k8s hosts
 hosts_entries:
-  - { ip: '192.168.100.2', hostname: 'k8s0', domain: 'cluster.loc' }
-  - { ip: '192.168.100.3', hostname: 'k8s1', domain: 'cluster.loc' }
-  - { ip: '192.168.100.4', hostname: 'k8s2', domain: 'cluster.loc' }
-  - { ip: '192.168.100.5', hostname: 'k8s3', domain: 'cluster.loc' }
-  - { ip: '192.168.100.6', hostname: 'k8s4', domain: 'cluster.loc' }
-  - { ip: '192.168.100.7', hostname: 'k8s5', domain: 'cluster.loc' }
+- {ip: '192.168.10.113', hostname: 'k8s0', domain: 'cluster.loc'}
+- {ip: '192.168.10.114', hostname: 'k8s1', domain: 'cluster.loc'}
+- {ip: '192.168.10.115', hostname: 'k8s2', domain: 'cluster.loc'}
+- {ip: '192.168.10.116', hostname: 'k8s3', domain: 'cluster.loc'}
+- {ip: '192.168.10.117', hostname: 'k8s4', domain: 'cluster.loc'}
+- {ip: '192.168.10.118', hostname: 'k8s5', domain: 'cluster.loc'}
 
 # default = true .uuuu.YYYY-MM-DD@HH:MM:SS~
 backup_hosts_file: false
